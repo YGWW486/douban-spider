@@ -1,0 +1,48 @@
+# 豆瓣电影Top250爬虫配置文件
+
+# 请求头池 - 包含不同浏览器和设备的User-Agent
+headers_pool:
+  - User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    Referer: "https://movie.douban.com/"
+    Cache-Control: "max-age=0"
+    Accept-Language: "zh-CN,zh;q=0.9"
+  - User-Agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15"
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    Referer: "https://movie.douban.com/top250"
+    Cache-Control: "max-age=0"
+    Accept-Language: "zh-CN,zh;q=0.9"
+  - User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0"
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    Referer: "https://movie.douban.com/"
+    Cache-Control: "max-age=0"
+    Accept-Language: "zh-CN,zh;q=0.9"
+  - User-Agent: "Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    Referer: "https://movie.douban.com/"
+    Cache-Control: "max-age=0"
+    Accept-Language: "zh-CN,zh;q=0.9"
+
+# 延时范围配置 - 根据响应时间自动调整
+delay_range:
+  fast: [1, 2]    # 响应时间>3秒时使用
+  normal: [2, 4]  # 响应时间1-3秒时使用
+  slow: [4, 6]    # 响应时间<1秒时使用
+
+# MySQL数据库配置
+mysql_config:
+  host: "localhost"
+  user: "root"
+  password: "123456"
+  db: "douban"
+
+# 代理IP配置（示例格式，实际使用时需替换为有效代理）
+# proxies:
+#  - "http://username:password@proxy_ip1:port"
+#  - "http://username:password@proxy_ip2:port"
+
+# Cookie文件路径
+cookie_file: "douban_cookie.json"
+
+# 断点文件路径
+breakpoint_file: "breakpoint.txt"

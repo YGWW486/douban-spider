@@ -1,0 +1,8 @@
+requests
+beautifulsoup4
+pyyaml
+pymysql
+aiohttp
+pandas
+matplotlib
+seaborn
