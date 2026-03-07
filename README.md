@@ -1,116 +1,103 @@
-# 豆瓣电影Top250爬虫 - 优化版
+# douban-top250-crawler
+豆瓣电影Top250爬虫（优化版）- 高稳定性、可配置、支持断点续爬与数据可视化
 
-基于Python开发的豆瓣电影Top250数据爬取工具，具备完善的反爬策略、高稳定性和灵活的存储选项。
+## 项目简介
+一个基于Python开发的豆瓣电影Top250爬虫工具，支持：
+- 异步/同步爬取双模式
+- 断点续爬（避免重复爬取）
+- Cookie持久化（解决反爬限制）
+- 多格式数据导出（CSV/JSON）
+- 电影评分分布可视化
+- 完善的日志记录与异常处理
 
-## 优化特性
-
-### 1. 反爬策略优化
-- **Cookie动态化处理**：支持从文件加载Cookie，避免手动复制
-- **请求头多样化**：内置多种浏览器User-Agent，随机切换
-- **代理IP池集成**：支持配置代理IP池，自动检测有效性
-- **自适应延时**：根据响应时间动态调整请求间隔，避免被封
-
-### 2. 数据解析与完整性优化
-- **字段细分**：将原有的合并字段拆分为独立字段（年份、国家、类型）
-- **数据校验**：自动过滤异常数据（评分过低、评论数过少等）
-- **详情页支持**：可选爬取电影详情页，获取更多信息
-
-### 3. 稳定性与容错优化
-- **重试机制升级**：对关键字段解析失败时自动重试
-- **断点续爬**：程序中断后可从上次位置继续，无需重新开始
-- **完善的日志**：详细记录爬取过程，便于问题排查
-
-### 4. 性能与效率优化
-- **异步请求支持**：使用aiohttp实现异步爬取，提升效率
-- **多种存储选项**：支持CSV、JSON、MySQL三种存储方式
-- **数据去重**：自动检测重复数据，避免重复存储
-
-### 5. 易用性与扩展性优化
-- **命令行参数**：支持通过命令行调整运行参数，无需修改代码
-- **配置文件分离**：核心参数集中在config.yaml，易于维护
-- **模块化架构**：代码按功能拆分为多个模块，耦合度低
-
-## 快速开始
-
-### 安装依赖
-
-```bash
-pip install requests beautifulsoup4 pyyaml pymysql aiohttp
-```
-
-### 基本使用
-
-#### 测试模式（只爬取第一页）
-
-```bash
-python main.py
-```
-
-#### 全量爬取（250部电影）
-
-```bash
-python main.py --mode full
-```
-
-#### 指定输出格式
-
-```bash
-# 保存为JSON格式
-python main.py --output json
-
-# 保存到MySQL数据库
-python main.py --output mysql
-```
-
-#### 使用异步模式
-
-```bash
-python main.py --async
-```
-
-#### 手动指定Cookie
-
-```bash
-python main.py --cookie "your_cookie_here"
-```
-
-## 配置文件说明
-
-项目使用`config.yaml`作为配置文件，包含以下主要配置项：
-
-- **headers_pool**：请求头池，用于随机切换User-Agent
-- **delay_range**：延时范围配置，根据响应时间自动调整
-- **mysql_config**：MySQL数据库连接配置
-- **proxies**：代理IP列表（需取消注释并填写实际代理）
-- **cookie_file**：Cookie文件路径
-- **breakpoint_file**：断点文件路径
+## 🛠 技术栈
+- 核心语言：Python 3.8+
+- 爬虫核心：requests / aiohttp（异步）
+- 数据解析：BeautifulSoup4
+- 配置管理：PyYAML
+- 数据存储：CSV/JSON / MySQL（可选）
+- 可视化：matplotlib
+- 辅助工具：python-dotenv（敏感配置隔离）
 
 ## 项目结构
+douban-top250-crawler/
+├── README.md               # 项目说明文档
+├── requirements.txt        # 依赖清单
+├── .gitignore              # Git忽略规则
+├── .env.example            # 环境变量示例（敏感配置）
+├── start.bat               # Windows一键启动脚本
+├── config.yaml             # 核心配置文件
+├── config.py               # 配置加载模块
+├── main.py                 # 爬虫主程序
+├── crawler.py              # 爬虫核心逻辑
+├── parser.py               # 数据解析模块
+├── storage.py              # 数据存储模块
+├── visualization.py        # 数据可视化模块
+├── utils/                  # 工具函数目录
+│   ├── log_utils.py        # 日志工具
+│   ├── exception_utils.py  # 异常处理工具
+│   └── cookie_utils.py     # Cookie管理工具
+├── data/                   # 爬取数据存储目录（运行后生成）
+│   ├── douban_top250.csv   # CSV格式数据
+│   └── douban_top250.json  # JSON格式数据
+├── logs/                   # 日志目录（运行后生成）
+└── cache/                  # 缓存目录（运行后生成）
+    ├── douban_cookie.json  # Cookie缓存文件
+    └── breakpoint.json     # 断点续爬缓存文件
 
-```
-douban_spider/
-├── main.py              # 主程序入口
-├── config.py            # 配置管理模块
-├── request_utils.py     # 请求工具模块
-├── parse_utils.py       # 解析工具模块
-├── storage_utils.py     # 存储工具模块
-├── config.yaml          # 配置文件
-├── douban_top250.csv    # CSV输出文件
-├── douban_top250.json   # JSON输出文件
-├── douban_cookie.json   # Cookie存储文件
-└── breakpoint.txt       # 断点记录文件
-```
+## ⚙️ 环境准备
+### 1. 安装依赖
+pip install -r requirements.txt
 
-## 注意事项
+### 2. 配置文件
+- 复制 .env.example 为 .env，填写MySQL密码（若使用MySQL存储）：
+MYSQL_PASSWORD=your_mysql_password
 
-1. **反爬提示**：豆瓣有严格的反爬机制，建议合理设置爬取间隔
-2. **Cookie使用**：长期运行建议通过浏览器手动登录后导出Cookie
-3. **代理配置**：如需使用代理，请在config.yaml中配置有效的代理IP
-4. **MySQL存储**：使用前需确保MySQL服务已启动，并创建相应的数据库
+- 修改 config.yaml 配置项（按需调整）：
+# 爬虫配置
+crawler:
+  mode: "async"          # 爬取模式：async(异步)/sync(同步)
+  delay: 1               # 请求延迟（秒），避免反爬
+  retry_times: 3         # 失败重试次数
+# 存储配置
+storage:
+  format: ["csv", "json"] # 导出格式
+  mysql: False           # 是否启用MySQL存储
+# 缓存配置
+cache:
+  cookie_file: "cache/douban_cookie.json"
+  breakpoint_file: "cache/breakpoint.json"
 
-## 扩展建议
+## 快速启动
+### Windows
+# 双击启动（推荐）
+start.bat
 
-1. 实现定时任务，定期更新电影数据
-2. 添加邮件告警功能，当爬虫遇到严重问题时及时通知
-3. 开发Web界面，可视化展示爬取结果和状态
-4. 扩展支持更多电影榜单，如热门电影、新片榜等
+# 或命令行启动
+python main.py
+
+### Linux/Mac
+python main.py
+
+## 📊 输出结果
+运行完成后，可在 data/ 目录下查看：
+- douban_top250.csv：结构化电影数据（包含排名、标题、评分、导演、演员、简介等）
+- douban_top250.json：JSON格式数据，便于后续接口调用
+- ratings_distribution.png：评分分布可视化图表（生成在data/目录）
+
+##  核心功能说明
+### 1. 断点续爬
+爬虫会记录已爬取的电影ID到 cache/breakpoint.json，若中途中断，重新运行会自动从断点处继续爬取。
+
+### 2. 反爬策略
+- Cookie持久化：自动保存/加载豆瓣Cookie，避免频繁登录
+- 随机请求延迟：避免请求频率过高触发反爬
+- 失败重试：请求失败自动重试，提升稳定性
+
+### 3. 数据可视化
+运行完成后自动生成评分分布柱状图，直观展示Top250电影的评分分布规律。
+
+##  注意事项
+1. 请勿频繁爬取，遵守豆瓣网站的robots协议
+2. 若出现爬取失败，可更新 cache/douban_cookie.json 中的Cookie
+3. 敏感配置（如MySQL密码）请写在 .env 文件，不要直接提交到代码仓库
